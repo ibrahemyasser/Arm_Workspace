@@ -38,7 +38,7 @@
  *  GLOBAL DATA TYPES AND STRUCTURES
  *********************************************************************************************************************/
 
-typedef uint8 Std_ReturnType;
+typedef uint8_t Std_ReturnType;
 #define E_OK          0u
 #define E_NOT_OK      1u
 

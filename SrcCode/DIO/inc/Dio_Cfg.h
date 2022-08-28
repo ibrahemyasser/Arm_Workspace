@@ -8,8 +8,8 @@
  *  Description:  <Write File DESCRIPTION here>
  *
  *********************************************************************************************************************/
-#ifndef DIO_CFG.H
-#define DIO_CFG.H
+#ifndef DIO_CFG_H      
+#define DIO_CFG_H      
 
 /**********************************************************************************************************************
  * INCLUDES
@@ -94,11 +94,16 @@ typedef enum
 	PORTF
 }DIO_PortType;
 
+
 typedef enum
 {
 	LOW = 0,
 	HIGH
 }DIO_LevelType;
+
+
+
+
 
 typedef uint8_t DIO_PortLevelType;
 
@@ -111,11 +116,11 @@ typedef uint8_t DIO_PortLevelType;
  *  GLOBAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
 
-DIO_LevelType DIO_ReadChannel (DIO_ChannelType ChannelId);
-void DIO_WriteChannel (DIO_ChannelType channelId, DIO_LevelType Level);
+DIO_LevelType DIO_ReadChannel (DIO_PortType PortId , DIO_ChannelType ChannelId);
+void DIO_WriteChannel (DIO_PortType PortId , DIO_ChannelType channelId, DIO_LevelType Level);
 DIO_PortLevelType DIO_ReadPort (DIO_PortType PortId);
-void DIO_WritePort (DIO_PortType PortId, DIO_LevelType Level);
-DIO_LevelType DIO_FlipChannel (DIO_ChannelType ChannelId);
+void DIO_WritePort (DIO_PortType PortId, DIO_PortLevelType Level);
+void DIO_FlipChannel (DIO_PortType PortId,DIO_ChannelType ChannelId);
 
 #endif  /* FILE_NAME_H */
 
