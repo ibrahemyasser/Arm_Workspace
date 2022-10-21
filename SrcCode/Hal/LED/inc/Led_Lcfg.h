@@ -2,24 +2,25 @@
 
  *  FILE DESCRIPTION
  *  -------------------------------------------------------------------------------------------------------------------
- *         File:  IntCtr_Cfg.h
+ *         File:  <Write File Name>
  *       Module:  -
  *
- *  Description:  <Write File DESCRIPTION here>
- *
+ *  Description:  <Write File DESCRIPTION here>     
+ *  
  *********************************************************************************************************************/
-#ifndef INTCTRL_CFG_H_
-#define INTCTRL_CFG_H_
+#ifndef LED_LCFG_H
+#define LED_LCFG_H
 
 /**********************************************************************************************************************
  * INCLUDES
  *********************************************************************************************************************/
-#include "Std_Types.h"
-#include "IntCtrl_Types.h"
+#include "Port_Cfg.h"
+
 
 /**********************************************************************************************************************
  *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
+
 
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION MACROS
@@ -29,25 +30,62 @@
 /**********************************************************************************************************************
  *  GLOBAL DATA TYPES AND STRUCTURES
  *********************************************************************************************************************/
-
-typedef struct 
+static Port_ConfigType Led_CFG = 
 {
-	IRQn_Type InterruptPeripheralGate;
-	uint8_t InterruptGrouping;
-	uint8_t InterruptGroupPriority;
-	uint8_t InterruotSubgroubPriority;
-}IntCtr_Config;
+		GPIOB,
+		PORTB,
+		PB7,
+		DIGITAL_PIN,
+		LOW,
+		OUTPUT,
+		PULL_UP,
+		R8R
+};
+static Port_ConfigType Button_Ctr =
+	{
+		GPIOA,
+		PORTA,
+		PA0,
+		DIGITAL_PIN,
+		LOW,
+		INPUT,
+		PULL_DOWN,
+		R4R
+		
+	};
+static Port_ConfigType Button_ON = 
+	{
+		GPIOC,
+		PORTC,
+		PC0,
+		DIGITAL_PIN,
+		LOW,
+		INPUT,
+		PULL_DOWN,
+		R4R
+		
+	};
+static Port_ConfigType Button_OFF = 
+{
+		GPIOD,
+		PORTD,
+		PD0,
+		DIGITAL_PIN,
+		LOW,
+		INPUT,
+		PULL_DOWN,
+		R4R
+		
+};
 
 /**********************************************************************************************************************
  *  GLOBAL DATA PROTOTYPES
  *********************************************************************************************************************/
 
-
+ 
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
-void IntCrtl_Init(IntCtr_Config *Int_Cfg );
-void IntCtrl_EnableIRQ(IRQn_Type interruptIRQn);
 
 #endif  /* FILE_NAME_H */
 

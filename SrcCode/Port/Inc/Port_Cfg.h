@@ -19,7 +19,7 @@
 /**********************************************************************************************************************
  *  GLOBAL CONSTANT MACROS
  *********************************************************************************************************************/
-
+#define ANALOG_ENABLE									0 // 0 to disable and 1 to enable
 
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION MACROS
@@ -40,6 +40,21 @@
 typedef enum
 {
 	/*********************** PORTA Alternate functions pins  ***********************/
+	DIGITAL_PIN					= -1,
+	/*********************** ANALOG PINS  ***********************/
+	AIN0 								= 0,
+	AIN1,
+	AIN2,
+	AIN3,
+	AIN4,
+	AIN5,
+	AIN6,
+	AIN7,
+	AIN8,
+	AIN9,
+	AIN10,
+	AIN11,
+	/*********************** PORTA Alternate functions pins  ***********************/
 	PA0_U0Rx						= 1,
 	PA0_CAN1Rx					= 8,
 	PA1_U0Tx						= 1,
@@ -52,9 +67,6 @@ typedef enum
 	PA6_M1PWM2					= 5,
 	PA7_I2C1SDA					= 3,
 	PA7_M1PWM3					= 5,
-}PORTA_ALF;
-typedef enum
-{
 	/*********************** PORTB Alternate functions pins  ***********************/
 	PB0_U1Rx						= 1,
 	PB0_T2CCP0					= 7,
@@ -78,9 +90,6 @@ typedef enum
 	PB7_SSI2Tx					= 2,
 	PB7_M0PWM1					= 4,
 	PB7_T0CCP1					= 7,
-}PORTB_ALF;
-typedef enum
-{
 	/*********************** PORTC Alternate functions pins  ***********************/
 	PC0_TCK_SWCLK				= 1,
 	PC0_T4CCP0					= 7,
@@ -109,9 +118,6 @@ typedef enum
 	PC7_U3Tx						= 1,
 	PC7_WT1CCP1					= 7,
 	PC7_USB0PFLT				= 8,	
-}PORTC_ALF;
-typedef enum
-{
 	/*********************** PORTD Alternate functions pins  ***********************/
 	PD0_SSI3Clk					= 1,
 	PD0_SSI1Clk					= 2,
@@ -146,10 +152,7 @@ typedef enum
 	PD7_U2Tx						= 1,
 	PD7_PhB0						= 6,
 	PD7_WT5CCP1					= 7,
-	PD7_NMI							= 8,	
-}PORTD_ALF;
-typedef enum
-{
+	PD7_NMI							= 8,
 	/*********************** PORTE Alternate functions pins  ***********************/
 	PE0_U7Rx						= 1,
 	PE1_U7Tx						= 1,
@@ -162,10 +165,7 @@ typedef enum
 	PE5_I2C2SDA					= 3,
 	PE5_M0PWM5					= 4,	
 	PE5_M1PWM3					= 5,
-	PE5_CAN0Tx				  = 8,	
-}PORTE_ALF;
-typedef enum
-{
+	PE5_CAN0Tx				  = 8,
 	/*********************** PORTF Alternate functions pins  ***********************/
 	PF0_U1RTS						= 1,
 	PF0_SSI1Rx					= 2,
@@ -196,16 +196,8 @@ typedef enum
 	PF4_IDX0						= 6,
 	PF4_T2CCP0					= 7,
 	PF4_USB0EPEN				= 8
-}PORTF_ALF;
-typedef struct
-{
-	PORTA_ALF PORTA_alf;
-	PORTB_ALF PORTB_alf;
-	PORTC_ALF PORTC_alf;
-	PORTD_ALF PORTD_alf;
-	PORTE_ALF PORTE_alf;
-	PORTF_ALF PORTF_alf;
 }Port_PinModeType;
+
 
 typedef enum
 {
@@ -230,21 +222,21 @@ typedef enum
 
 typedef struct 
 {
-	
-	DIO_PortType PortType;
-	DIO_ChannelType ChannelId;
-	Port_PinModeType PinMode;
-	DIO_LevelType PortPinLevelValue;
-	Port_PinDirectionType PortPinDirection;
-	Port_PinAttachType PortPinInternalAttach;
-	Port_PinOutputCurrentType  PinOutputCurrent;
+	GPIO_Type *GPIOx; 														// select the port registers
+	DIO_PortType PortType; 												//enum for port name
+	DIO_ChannelType ChannelId; 										// select the channel of the port
+	Port_PinModeType PinMode; 										// select the type of the pin in the case of alternate function
+	DIO_LevelType PortPinLevelValue; 							// select the initial value of the pin
+	Port_PinDirectionType PortPinDirection; 			// select the mode of the pin if it out or in
+	Port_PinAttachType PortPinInternalAttach; 		// select if it pull up or down or open drain
+	Port_PinOutputCurrentType  PinOutputCurrent; 	// select the current of the pin in case output
 
 }Port_ConfigType;
  
 /**********************************************************************************************************************
  *  GLOBAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
-void Port_Init( const Port_ConfigType* ConfigPtr,GPIO_Type *GPIOx); 
+void Port_Init( const Port_ConfigType* ConfigPtr); 
  
 #endif  /* FILE_NAME_H */
 

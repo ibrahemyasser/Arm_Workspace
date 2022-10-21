@@ -1,11 +1,11 @@
 /**********************************************************************************************************************
  *  FILE DESCRIPTION
  *  -----------------------------------------------------------------------------------------------------------------*/
-/**        \file  IntCrtl.c
- *        \brief  Nested Vector Interrupt Controller Driver
+/**        \file  FileName.c
+ *        \brief  
  *
- *      \details  The Driver Configure All MCU interrupts Priority into gorups and subgroups
- *                Enable NVIC Interrupt Gate for Peripherals
+ *      \details  
+ *
  *
  *********************************************************************************************************************/
 
@@ -13,13 +13,11 @@
  *  INCLUDES
  *********************************************************************************************************************/
 #include "Std_Types.h"
-#include "IntCtrl.h"
-#include "Mcu_Hw.h"
-#include "IntCtrl_Cfg.h"
-#include "Bit_Math.h"
+#include "cpu_driver.h"
+
 /**********************************************************************************************************************
 *  LOCAL MACROS CONSTANT\FUNCTION
-*********************************************************************************************************************/	
+*********************************************************************************************************************/
 
 /**********************************************************************************************************************
  *  LOCAL DATA 
@@ -41,60 +39,47 @@
  *  GLOBAL FUNCTIONS
  *********************************************************************************************************************/
 
+void cpuDriver_EnableGlobalInterrupt(void)
+{
+	__asm("CPSIE i;");
+}
+void cpuDriver_DisableGlobalInterrupt(void)
+{
+	__asm("CPSID i;");
+}
+
+void cpuDriver_EnablePriviledgeMode(void)
+{
+	__asm("SVC #0;");
+}
+
+void cpuDriver_DisablePriviledgeMode(void)
+{
+	__asm(
+					"MOVS 	R0, 		#4;"
+					"MSR 		CONTROL, R0;"
+	);
+}
+
+
 
 /******************************************************************************
-* \Syntax          : void IntCrtl_Init(void)                                      
-* \Description     : initialize Nvic\SCB Module by parsing the Configuration 
-*                    into Nvic\SCB registers                                    
+* \Syntax          : Std_ReturnType FunctionName(AnyType parameterName)        
+* \Description     : Describe this service                                    
 *                                                                             
 * \Sync\Async      : Synchronous                                               
 * \Reentrancy      : Non Reentrant                                             
-* \Parameters (in) : None                     
+* \Parameters (in) : parameterName   Parameter Describtion                     
 * \Parameters (out): None                                                      
-* \Return value:   : None
+* \Return value:   : Std_ReturnType  E_OK
+*                                    E_NOT_OK                                  
 *******************************************************************************/
-void IntCtrl_EnableIRQ(IRQn_Type interruptIRQn)
+/*Std_ReturnType FunctionName(AnyType parameterName)
 {
-	if(interruptIRQn >= 0)
-	{
-			SET_BIT_PERIPH_BAND_VAL(NVIC->EN[(interruptIRQn)/32],1<<(uint8_t)interruptIRQn % 32);
-	}
-
-}
-
-void IntCrtl_Init(IntCtr_Config* Int_Cfg)
-{
-
-
-	/*TODO Configure Grouping\SubGrouping System in APINT register in SCB*/
-	SET_BIT_PERIPH_BAND_VAL(SCB->APINT,(uint32_t)APINT_KEY<<16);
-	SET_BIT_PERIPH_BAND_VAL(SCB->APINT,(uint32_t)Int_Cfg->InterruptGrouping & (uint32_t)0x07 <<8);
-	/*TODO : Assign Group\Subgroup priority in NVIC_PRIx Nvic and SCB_SYSPRIx Registers*/  
-	switch(Int_Cfg->InterruptPeripheralGate % 4)
-	{
-		case 0:
-			SET_BIT_PERIPH_BAND_VAL(NVIC->PRI[(Int_Cfg->InterruptPeripheralGate)/4],(uint32_t)Int_Cfg->InterruptGroupPriority<<5);
-			break;
-		case 1:
-			SET_BIT_PERIPH_BAND_VAL(NVIC->PRI[(Int_Cfg->InterruptPeripheralGate)/4],(uint32_t)Int_Cfg->InterruptGroupPriority<<13);
-			break;
-		case 2:
-			SET_BIT_PERIPH_BAND_VAL(NVIC->PRI[(Int_Cfg->InterruptPeripheralGate)/4],(uint32_t)Int_Cfg->InterruptGroupPriority<<21);
-			break;
-		case 3:
-			SET_BIT_PERIPH_BAND_VAL(NVIC->PRI[(Int_Cfg->InterruptPeripheralGate)/4],(uint32_t)Int_Cfg->InterruptGroupPriority<<29);
-			break;
-		default:
-			break;
-	}
 	
 	
-	/*TODO : Enable\Disable based on user configurations in NVIC_ENx and SCB_Sys Registers */
-	IntCtrl_EnableIRQ(Int_Cfg->InterruptPeripheralGate);
-	
-}
-
+}*/
 
 /**********************************************************************************************************************
- *  END OF FILE: IntCrtl.c
+ *  END OF FILE: FileName.c
  *********************************************************************************************************************/

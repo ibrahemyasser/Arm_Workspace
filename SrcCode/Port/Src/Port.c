@@ -54,9 +54,87 @@
 * \Return value:   : Std_ReturnType  E_OK
 *                                    E_NOT_OK                                  
 *******************************************************************************/
-void Port_Init( const Port_ConfigType* ConfigPtr,GPIO_Type *GPIOx)
+void Port_Init( const Port_ConfigType* ConfigPtr)
 {
-		switch(ConfigPtr->PortType)
+		
+			SET_BIT_PERIPH_BAND(SYSCTRL->GPIOHBCTL,ConfigPtr->PortType);
+	
+			ConfigPtr->GPIOx->GPIOLOCK = GPIO_LOCKKEY;
+			SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIOCR,ConfigPtr->PortType);
+			ConfigPtr->GPIOx->GPIOLOCK = GPIO_UNLOCKKEY;
+	
+			if(ConfigPtr->PinMode == DIGITAL_PIN)
+			{
+				SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIODEN,ConfigPtr->ChannelId);
+				
+			}else if(ConfigPtr->PinMode && !ANALOG_ENABLE )
+			{
+				SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIODEN,ConfigPtr->ChannelId);
+				SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIOAFSEL ,ConfigPtr->ChannelId);// enable the pin as an alternate function
+				SET_BIT_PERIPH_BAND_VAL(ConfigPtr->GPIOx->GPIOPCTL ,(uint32_t)ConfigPtr->PinMode << (4 * (ConfigPtr->ChannelId)));//assign the pin to the specified alternate mode
+			} 
+			#if (ANALOG_ENABLE)
+			{
+				CLEAR_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIODEN,ConfigPtr->ChannelId);
+				SET_BIT_PERIPH_BAND_VAL(ConfigPtr->GPIOx->GPIOAMSEL,(0 * ConfigPtr->ChannelId),(uint32_t)ConfigPtr->PinMode);
+			}
+			#endif
+			
+			
+			
+			if(ConfigPtr->PortPinDirection == OUTPUT)
+			{
+					SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIODIR , ConfigPtr->ChannelId);
+			}else
+			{
+					CLEAR_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIODIR, ConfigPtr->ChannelId);
+			}
+			
+			
+			if(ConfigPtr->PortPinLevelValue == LOW)
+			{
+					CLEAR_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIODATA ,ConfigPtr->ChannelId);
+			}else if(ConfigPtr->PortPinLevelValue == HIGH)
+			{
+					SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIODATA ,ConfigPtr->ChannelId);
+			}
+			
+			
+			
+			switch(ConfigPtr->PinOutputCurrent)
+			{
+				case R2R:
+						SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIODR2R,ConfigPtr->ChannelId);
+						break;
+				case R4R:
+						SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIOR4R,ConfigPtr->ChannelId);
+						break;
+				case R8R:
+						SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIOR8R,ConfigPtr->ChannelId);
+						break;
+			}
+			
+			
+			switch(ConfigPtr->PortPinInternalAttach)
+			{
+				case PULL_UP:
+						SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIOPUR,ConfigPtr->ChannelId);
+						break;
+				case PULL_DOWN:
+						SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIOPDR,ConfigPtr->ChannelId);
+						break;
+				case OPEN_DRAIN:
+						SET_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIOODR,ConfigPtr->ChannelId);
+						break;
+			}	
+		
+
+				
+			ConfigPtr->GPIOx->GPIOLOCK = GPIO_LOCKKEY;
+			CLEAR_BIT_PERIPH_BAND(ConfigPtr->GPIOx->GPIOCR , ConfigPtr->PortType );
+			ConfigPtr->GPIOx->GPIOLOCK = GPIO_UNLOCKKEY;
+	
+		/*switch(ConfigPtr->PortType)
 		{
 			case PORTA:
 					GPIOx = GPIOA;
@@ -346,11 +424,9 @@ void Port_Init( const Port_ConfigType* ConfigPtr,GPIO_Type *GPIOx)
 								break;
 					}
 					break;
-		}
+		}*/
 		
-		GPIOx->GPIOLOCK = GPIO_LOCKKEY;
-		GPIOx->GPIOCR &= ~(1 << ConfigPtr->PortType );
-		GPIOx->GPIOLOCK = GPIO_UNLOCKKEY;
+
 
 }
 

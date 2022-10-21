@@ -1,11 +1,11 @@
 /**********************************************************************************************************************
  *  FILE DESCRIPTION
  *  -----------------------------------------------------------------------------------------------------------------*/
-/**        \file  IntCrtl.c
- *        \brief  Nested Vector Interrupt Controller Driver
+/**        \file  Led.c
+ *        \brief  
  *
- *      \details  The Driver Configure All MCU interrupts Priority into gorups and subgroups
- *                Enable NVIC Interrupt Gate for Peripherals
+ *      \details  
+ *
  *
  *********************************************************************************************************************/
 
@@ -13,13 +13,13 @@
  *  INCLUDES
  *********************************************************************************************************************/
 #include "Std_Types.h"
-#include "IntCtrl.h"
-#include "Mcu_Hw.h"
+#include "Led.h"
+#include "Led_Lcfg.h"
 #include "IntCtrl_Cfg.h"
-#include "Bit_Math.h"
+
 /**********************************************************************************************************************
 *  LOCAL MACROS CONSTANT\FUNCTION
-*********************************************************************************************************************/	
+*********************************************************************************************************************/
 
 /**********************************************************************************************************************
  *  LOCAL DATA 
@@ -28,7 +28,9 @@
 /**********************************************************************************************************************
  *  GLOBAL DATA
  *********************************************************************************************************************/
-
+//static IntCtr_Config Int_ButtonCtr;
+//static IntCtr_Config Int_ButtonOn;
+//static IntCtr_Config Int_ButtonOff;
 /**********************************************************************************************************************
  *  LOCAL FUNCTION PROTOTYPES
  *********************************************************************************************************************/
@@ -40,61 +42,69 @@
 /**********************************************************************************************************************
  *  GLOBAL FUNCTIONS
  *********************************************************************************************************************/
+void Led_Init()
+{
+	Port_Init(&Led_CFG);
+	Port_Init(&Button_Ctr);
+	Port_Init(&Button_ON);
+	Port_Init(&Button_OFF);
+	SYSCTRL->RCGCGPIO = 0x0F;
+	GPIOA->GPIOIM = 0x01;
+	GPIOC->GPIOIM = 0x01;
+	GPIOD->GPIOIM = 0x01;
+	
+	GPIOA->GPIOIS = 0x01;
+	GPIOC->GPIOIS = 0x01;
+	GPIOD->GPIOIS = 0x01;
+	
+	GPIOA->GPIOIEV = 0x01;
+	GPIOC->GPIOIEV = 0x01;
+	GPIOD->GPIOIEV = 0x01;
+	
+	GPIOA->GPIOIBE = 0x00;
+	GPIOC->GPIOIBE = 0x00;
+	GPIOD->GPIOIBE = 0x00;
+	
+	GPIOA->GPIOICR = 0x01;
+	GPIOC->GPIOICR = 0x01;
+	GPIOD->GPIOICR = 0x01;
+	
+}
+void Interrupt_Init(void)
+{
+	IntCtrl_EnableIRQ(GPIO_PortA_IRQn	);
+	IntCtrl_EnableIRQ(GPIO_PortC_IRQn	);
+	IntCtrl_EnableIRQ(GPIO_PortD_IRQn	);
+}
+void Led_On(void)
+{
+	
+	DIO_WriteChannel(Led_CFG.PortType,Led_CFG.ChannelId,HIGH);
+}
+void Led_Off(void)
+{
+	DIO_WriteChannel(Led_CFG.PortType,Led_CFG.ChannelId,LOW);
+}
+
 
 
 /******************************************************************************
-* \Syntax          : void IntCrtl_Init(void)                                      
-* \Description     : initialize Nvic\SCB Module by parsing the Configuration 
-*                    into Nvic\SCB registers                                    
+* \Syntax          : Std_ReturnType FunctionName(AnyType parameterName)        
+* \Description     : Describe this service                                    
 *                                                                             
 * \Sync\Async      : Synchronous                                               
 * \Reentrancy      : Non Reentrant                                             
-* \Parameters (in) : None                     
+* \Parameters (in) : parameterName   Parameter Describtion                     
 * \Parameters (out): None                                                      
-* \Return value:   : None
+* \Return value:   : Std_ReturnType  E_OK
+*                                    E_NOT_OK                                  
 *******************************************************************************/
-void IntCtrl_EnableIRQ(IRQn_Type interruptIRQn)
+/*Std_ReturnType FunctionName(AnyType parameterName)
 {
-	if(interruptIRQn >= 0)
-	{
-			SET_BIT_PERIPH_BAND_VAL(NVIC->EN[(interruptIRQn)/32],1<<(uint8_t)interruptIRQn % 32);
-	}
-
-}
-
-void IntCrtl_Init(IntCtr_Config* Int_Cfg)
-{
-
-
-	/*TODO Configure Grouping\SubGrouping System in APINT register in SCB*/
-	SET_BIT_PERIPH_BAND_VAL(SCB->APINT,(uint32_t)APINT_KEY<<16);
-	SET_BIT_PERIPH_BAND_VAL(SCB->APINT,(uint32_t)Int_Cfg->InterruptGrouping & (uint32_t)0x07 <<8);
-	/*TODO : Assign Group\Subgroup priority in NVIC_PRIx Nvic and SCB_SYSPRIx Registers*/  
-	switch(Int_Cfg->InterruptPeripheralGate % 4)
-	{
-		case 0:
-			SET_BIT_PERIPH_BAND_VAL(NVIC->PRI[(Int_Cfg->InterruptPeripheralGate)/4],(uint32_t)Int_Cfg->InterruptGroupPriority<<5);
-			break;
-		case 1:
-			SET_BIT_PERIPH_BAND_VAL(NVIC->PRI[(Int_Cfg->InterruptPeripheralGate)/4],(uint32_t)Int_Cfg->InterruptGroupPriority<<13);
-			break;
-		case 2:
-			SET_BIT_PERIPH_BAND_VAL(NVIC->PRI[(Int_Cfg->InterruptPeripheralGate)/4],(uint32_t)Int_Cfg->InterruptGroupPriority<<21);
-			break;
-		case 3:
-			SET_BIT_PERIPH_BAND_VAL(NVIC->PRI[(Int_Cfg->InterruptPeripheralGate)/4],(uint32_t)Int_Cfg->InterruptGroupPriority<<29);
-			break;
-		default:
-			break;
-	}
 	
 	
-	/*TODO : Enable\Disable based on user configurations in NVIC_ENx and SCB_Sys Registers */
-	IntCtrl_EnableIRQ(Int_Cfg->InterruptPeripheralGate);
-	
-}
-
+}*/
 
 /**********************************************************************************************************************
- *  END OF FILE: IntCrtl.c
+ *  END OF FILE: FileName.c
  *********************************************************************************************************************/

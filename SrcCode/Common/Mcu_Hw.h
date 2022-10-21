@@ -16,6 +16,7 @@
  *********************************************************************************************************************/
 #include "Std_Types.h"
 
+
 /**********************************************************************************************************************
  *  GLOBAL DATA TYPES AND STRUCTURES
  *********************************************************************************************************************/
@@ -46,8 +47,9 @@ typedef union
 typedef struct
 {
 	
-	volatile uint32_t 				GPIODATA;
+	
 	volatile const uint32_t 	RESERVED[255];
+	volatile uint32_t 				GPIODATA;
 	volatile uint32_t 				GPIODIR;
 	volatile uint32_t 				GPIOIS;
 	volatile uint32_t 				GPIOIBE;
@@ -283,42 +285,6 @@ typedef struct
 	volatile uint32_t 				PRWTIMER;
 }SYSCTRL_Type;
 
-/*********************** Register map for General Purpose Timers ***********************/
-
-typedef struct 
-{
-	volatile uint32_t					GPTMCFG; 
-	volatile uint32_t					GPTMTAMR;
-	volatile uint32_t					GPTMTBMR;
-	volatile uint32_t					GPTMCTL;
-	volatile uint32_t					GPTMSYNC;
-	volatile const uint32_t		RESERVED;
-	volatile uint32_t					GPTMIMR;
-	volatile uint32_t					GPTMRIS;
-	volatile uint32_t					GPTMMIS;
-	volatile uint32_t					GPTMICR;
-	volatile uint32_t					GPTMTAILR;
-	volatile uint32_t					GPTMTBILR;
-	volatile uint32_t					GPTMTAMATCHR;
-	volatile uint32_t					GPTMTBMATCHR;
-	volatile uint32_t					GPTMTAPR;
-	volatile uint32_t					GPTMTBPR;
-	volatile uint32_t					GPTMTAPMR;
-	volatile uint32_t					GPTMTBPMR;
-	volatile uint32_t					GPTMTAR;
-	volatile uint32_t					GPTMTBR;
-	volatile uint32_t					GPTMTAV;
-	volatile uint32_t					GPTMTBV;
-	volatile uint32_t					GPTMRTCPD;
-	volatile uint32_t					GPTMTAPS;
-	volatile uint32_t					GPTMTBPS;
-	volatile uint32_t					GPTMTAPV;
-	volatile uint32_t					GPTMTBPV;
-	volatile const uint32_t		RESERVED1[981];			
-	volatile uint32_t					GPTMPP;
-	
-}TIMER_Type;
-
 
 
 
@@ -328,10 +294,14 @@ typedef struct
 #define CORTEXM4_PERI_BASE_ADDRESS             	0xE000E000
 #define GPIO_LOCKKEY														0x4C4F434B
 #define GPIO_UNLOCKKEY													0x4C4F0000
-#define APINT                                  	*((volatile uint32_t*)(CORTEXM4_PERI_BASE_ADDRESS+0xD0C))
-#define INTCTRL                                	*((volatile INTCTRL_Tag*)(CORTEXM4_PERI_BASE_ADDRESS+0xD04))
+
 
 /*********************** Peripheral memory map ***********************/
+#define PERIPH_BIT_BAND_ALIAS				0x42000000UL
+#define PERIPH_BIT_BAND_REGION			0x40000000UL
+#define SRAM_BIT_BAND_ALIAS					0x22000000UL
+#define SRAM_BIT_BAND_REGION				0x20000000UL
+
 #define WDT0_BASE										0x40000000UL
 #define WDT1_BASE										0x40001000UL
 #define SYSTEM_CONTROL_BASE					0x400FE000UL
@@ -348,19 +318,10 @@ typedef struct
 #define GPIOF_BASE							  	0x40025000UL
 #define GPIOF_BASE_AHB							0x4005D000UL
 
-#define GPTIMER0_BASE								0x40030000UL
-#define GPTIMER1_BASE								0x40031000UL
-#define GPTIMER2_BASE								0x40032000UL
-#define GPTIMER3_BASE								0x40033000UL
-#define GPTIMER4_BASE								0x40034000UL
-#define GPTIMER5_BASE								0x40035000UL
 
-#define GPWTIMER0_BASE							0x40036000UL
-#define GPWTIMER1_BASE							0x40037000UL
-#define GPWTIMER2_BASE							0x4004C000UL
-#define GPWTIMER3_BASE							0x4004D000UL
-#define GPWTIMER4_BASE							0x4004E000UL
-#define GPWTIMER5_BASE							0x4004F000UL
+#define NVIC_BASE										( CORTEXM4_PERI_BASE_ADDRESS + 0x0100UL )
+#define SCB_BASE										( CORTEXM4_PERI_BASE_ADDRESS + 0x0D00UL )
+#define SYSTICK_BASE								( CORTEXM4_PERI_BASE_ADDRESS + 0x0010UL )
 
 
 /*********************** Peripheral Declaration ***********************/
@@ -396,6 +357,10 @@ typedef struct
 #define WTIMER3								((TIMER_Type 			*)  GPWTIMER3_BASE)
 #define WTIMER4								((TIMER_Type 			*)  GPWTIMER4_BASE)
 #define WTIMER5								((TIMER_Type 			*)  GPWTIMER5_BASE)
+
+#define SYSTICK								((SYSTICK_Type		*)	SYSTICK_BASE)
+#define NVIC									((NVIC_Type				*) 	NVIC_BASE)
+#define SCB										((SCB_Type				*)	SCB_BASE)
 
 
 /**********************************************************************************************************************

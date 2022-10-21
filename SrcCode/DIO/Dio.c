@@ -83,23 +83,23 @@ void DIO_WriteChannel ( DIO_PortType PortId , DIO_ChannelType ChannelId, DIO_Lev
 		switch(PortId)
 		{
 			case PORTA:
-					SET_BIT(*((uint32_t*)((GPIOA->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					SET_BIT_PERIPH_BAND(GPIOA->GPIODATA ,ChannelId);
 					
 					break;
 			case PORTB:
-					SET_BIT(*((uint32_t*)((GPIOB->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					SET_BIT_PERIPH_BAND(GPIOB->GPIODATA ,ChannelId);
 					break;
 			case PORTC:
-					SET_BIT(*((uint32_t*)((GPIOC->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					SET_BIT_PERIPH_BAND(GPIOC->GPIODATA ,ChannelId);
 					break;
 			case PORTD:
-					SET_BIT(*((uint32_t*)((GPIOD->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					SET_BIT_PERIPH_BAND(GPIOD->GPIODATA ,ChannelId);
 					break;
 			case PORTE:
-					SET_BIT(*((uint32_t*)((GPIOE->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					SET_BIT_PERIPH_BAND(GPIOE->GPIODATA ,ChannelId);
 					break;
 			case PORTF:
-					SET_BIT(*((uint32_t*)((GPIOF->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					SET_BIT_PERIPH_BAND(GPIOF->GPIODATA ,ChannelId);
 					break;
 		}
 	}else
@@ -107,23 +107,23 @@ void DIO_WriteChannel ( DIO_PortType PortId , DIO_ChannelType ChannelId, DIO_Lev
 		switch(PortId)
 		{
 			case PORTA:
-					CLEAR_BIT(*((uint32_t*)((GPIOA->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					CLEAR_BIT_PERIPH_BAND(GPIOA->GPIODATA ,ChannelId);
 					
 					break;
 			case PORTB:
-					CLEAR_BIT(*((uint32_t*)((GPIOB->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					CLEAR_BIT_PERIPH_BAND(GPIOB->GPIODATA ,ChannelId);
 					break;
 			case PORTC:
-					CLEAR_BIT(*((uint32_t*)((GPIOC->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					CLEAR_BIT_PERIPH_BAND(GPIOC->GPIODATA ,ChannelId);
 					break;
 			case PORTD:
-					CLEAR_BIT(*((uint32_t*)((GPIOD->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					CLEAR_BIT_PERIPH_BAND(GPIOD->GPIODATA ,ChannelId);
 					break;
 			case PORTE:
-					CLEAR_BIT(*((uint32_t*)((GPIOE->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					CLEAR_BIT_PERIPH_BAND(GPIOE->GPIODATA ,ChannelId);
 					break;
 			case PORTF:
-					CLEAR_BIT(*((uint32_t*)((GPIOF->GPIODATA) + (1 << (2 + ChannelId) ))),ChannelId);
+					CLEAR_BIT_PERIPH_BAND(GPIOF->GPIODATA ,ChannelId);
 					break;
 		}
 	}
@@ -134,17 +134,23 @@ DIO_PortLevelType DIO_ReadPort (DIO_PortType PortId)
 	switch(PortId)
 	{
 		case PORTA:
-				return (DIO_PortLevelType)((GPIOA->GPIODATA) + (255 << (2) ));
+				return (*(volatile DIO_PortLevelType *)(((uint32_t)(&GPIOA->GPIODATA) + 0x3FC)));
+					//(DIO_PortLevelType)((GPIOA->GPIODATA) + (255 << (2) ));
 		case PORTB:
-				return (DIO_PortLevelType)((GPIOB->GPIODATA) + (255 << (2) ));
+				return (*(volatile DIO_PortLevelType *)(((uint32_t)(&GPIOB->GPIODATA) + 0x3FC)));	
+				//return (DIO_PortLevelType)((GPIOB->GPIODATA) + (255 << (2) ));
 		case PORTC:
-				return (DIO_PortLevelType)((GPIOC->GPIODATA) + (255 << (2) ));
+				return (*(volatile DIO_PortLevelType *)(((uint32_t)(&GPIOC->GPIODATA) + 0x3FC)));	
+				//return (DIO_PortLevelType)((GPIOC->GPIODATA) + (255 << (2) ));
 		case PORTD:
-				return (DIO_PortLevelType)((GPIOD->GPIODATA) + (255 << (2) ));
+				return (*(volatile DIO_PortLevelType *)(((uint32_t)(&GPIOD->GPIODATA) + 0x3FC)));	
+				//return (DIO_PortLevelType)((GPIOD->GPIODATA) + (255 << (2) ));
 		case PORTE:
-				return (DIO_PortLevelType)((GPIOE->GPIODATA) + (255 << (2) ));
+				return (*(volatile DIO_PortLevelType *)(((uint32_t)(&GPIOE->GPIODATA) + 0x3FC)));	
+				//return (DIO_PortLevelType)((GPIOE->GPIODATA) + (255 << (2) ));
 		case PORTF:
-				return (DIO_PortLevelType)((GPIOF->GPIODATA) + (255 << (2) ));
+				return (*(volatile DIO_PortLevelType *)(((uint32_t)(&GPIOF->GPIODATA) + 0x3FC)));	
+				//return (DIO_PortLevelType)((GPIOF->GPIODATA) + (255 << (2) ));
 	}
 
 	return 0;
@@ -155,22 +161,22 @@ void DIO_WritePort (DIO_PortType PortId, DIO_PortLevelType Level)
 	switch(PortId)
 	{
 		case PORTA:
-				*(uint32_t*)((GPIOF->GPIODATA) + (255 << (2) )) = Level;
+				WRITE_BIT_PERIPH_BAND_DATA_VAL(GPIOA->GPIODATA,Level);
 				break;
 		case PORTB:
-				*(uint32_t*)((GPIOF->GPIODATA) + (255 << (2) )) = Level;
+				WRITE_BIT_PERIPH_BAND_DATA_VAL(GPIOB->GPIODATA,Level);
 				break;	
 		case PORTC:
-				*(uint32_t*)((GPIOF->GPIODATA) + (255 << (2) )) = Level;
+				WRITE_BIT_PERIPH_BAND_DATA_VAL(GPIOC->GPIODATA,Level);
 				break;
 		case PORTD:
-				*(uint32_t*)((GPIOF->GPIODATA) + (255 << (2) )) = Level;
+				WRITE_BIT_PERIPH_BAND_DATA_VAL(GPIOD->GPIODATA,Level);
 				break;
 		case PORTE:
-				*(uint32_t*)((GPIOF->GPIODATA) + (255 << (2) )) = Level;
+				WRITE_BIT_PERIPH_BAND_DATA_VAL(GPIOE->GPIODATA,Level);
 				break;
 		case PORTF:
-				*(uint32_t*)((GPIOF->GPIODATA) + (255 << (2) )) = Level;
+				WRITE_BIT_PERIPH_BAND_DATA_VAL(GPIOF->GPIODATA,Level);
 				break;
 	}
 

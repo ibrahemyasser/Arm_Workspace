@@ -46,6 +46,12 @@ typedef enum
 	
 }Gpt_ChannelType;
 
+typedef enum
+{
+	COUNT_UP,
+	COUNT_DOWN,
+}Gpt_ChannelCountType;
+
 typedef uint32_t Gpt_ValueType ;
 
 typedef uint32_t Gpt_TickFrequencyType;
